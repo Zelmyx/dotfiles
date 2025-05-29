@@ -51,7 +51,7 @@
 (setq inhibit-startup-screen t)
  
 ;; Set the font. Note: height = px * 100
-(set-face-attribute 'default nil :font "JetBrains Mono" :height 120)
+(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 120)
 
 ;; Add unique buffer names in the minibuffer where there are many
 ;; identical files. This is super useful if you rely on folders for
