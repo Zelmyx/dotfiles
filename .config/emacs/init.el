@@ -412,6 +412,9 @@
   :ensure t
   :bind (("C-c s" . #'avy-goto-char-timer)))
 
+(use-package elfeed
+  :ensure t)
+
 (use-package calc
   :defer t)
 
