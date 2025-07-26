@@ -276,10 +276,28 @@
 ;; rust-analyzer to use Eglot with `rust-mode'.
 (use-package eglot
   :ensure t
-  :bind (("s-<mouse-1>" . eglot-find-implementation)
-         ("C-c ." . eglot-code-action-quickfix)))
+  :commands eglot
+  :bind (:map eglot-mode-map
+              ("C-h ." . eldoc))
+  :hook ((eglot-managed-mode . my/eglot-eldoc-settings)
+         (prog-mode . eglot-ensure))
+  :config
+  (defun my/eglot-eldoc-settings ()
+    (setq eldoc-documentation-strategy
+          'eldoc-documentation-compose-eagerly))
+  (setq eglot-extend-to-xref t)
+  (add-to-list 'eglot-server-programs
+             '((c-mode c++-mode objc-mode) . ("clangd"))))
+
+;; (use-package eglot-booster
+;;   :ensure t
+;;   :if (executable-find "emacs-lsp-booster")
+;;   :custom (eglot-booster-io-only t)
+;;   :after eglot
+;;   :init (eglot-booster-mode))
 
 (use-package lsp-mode
+  :disabled
   :ensure t
   :commands (lsp lsp-deferred)
   :hook ((c-mode c++-mode python-mode) . lsp)
@@ -293,9 +311,6 @@
   (setq lsp-pylsp-plugins-black-enabled t)
   (setq lsp-pylsp-server-command '("/home/edvin/.local/bin/pylsp"))
   )
-
-
-
 
 ;; Add extra context to Emacs documentation to help make it easier to
 ;; search and understand. This configuration uses the keybindings 
