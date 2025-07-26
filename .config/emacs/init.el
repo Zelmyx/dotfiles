@@ -211,14 +211,21 @@
   :bind (:map minibuffer-local-completion-map
               ("SPC" . self-insert-command)))
 
-;; Improve the accessibility of Emacs documentation by placing
-;; descriptions directly in your minibuffer. Give it a try:
-;; "M-x find-file".
 (use-package marginalia
-  :after vertico
   :ensure t
-  :init
-  (marginalia-mode))
+  :after setup-minibuffer
+  :init (marginalia-mode 1)
+  :bind (:map vertico-map
+         ("M-]" . marginalia-cycle)) ;; Not used
+  :config
+  (pcase-dolist (`(,regexp . ,category)
+                 '(("\\burl\\b" . url)
+                   ("\\bHistory\\b" . history)
+                   ("\\bdefinitions?\\b" . xref-location)
+                   ("\\bxref\\b" . xref-location)))
+    (setf (alist-get regexp marginalia-prompt-categories
+                     nil nil #'equal)
+          category)))
 
 ;; For -> etc.
 (use-package ligature
