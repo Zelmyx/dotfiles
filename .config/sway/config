@@ -18,6 +18,7 @@ input * {
 input type:touchpad {
     tap enabled
     natural_scroll enabled
+    scroll_method two_finger
 }
 
 #========================#
