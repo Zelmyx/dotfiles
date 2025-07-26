@@ -58,6 +58,8 @@
 ;; organization and have lots of files with the same name,
 ;; e.g. foo/index.ts and bar/index.ts.
 (require 'uniquify)
+(setq uniquify-buffer-name-style 'forward)
+
 
 ;; Automatically insert closing parens
 (electric-pair-mode t)
@@ -84,7 +86,6 @@
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 ;; (column-number-mode)
 
-
 ;; Set warnings to silent
 (setq native-comp-async-report-warnings-errors 'silent)
 
@@ -97,8 +98,7 @@
 
 ;; The `setq' special form is used for setting variables. Remember
 ;; that you can look up these variables with "C-h v variable-name".
-(setq uniquify-buffer-name-style 'forward
-      window-resize-pixelwise t
+(setq window-resize-pixelwise t
       frame-resize-pixelwise t
       load-prefer-newer t
       backup-by-copying t
@@ -159,14 +159,33 @@
 ;; the minibuffer will show you a filterable list of matches.
 (use-package vertico
   :ensure t
+  :after minibuffer
+  :commands vertico-mode
+  :init (vertico-mode 1)
+  :bind (:map vertico-map
+         ("M-RET"   . nil)
+         ("M-s"     . nil)
+         ("M-i"     . vertico-insert)
+         ("C-M-n"   . vertico-next-group)
+         ("C-M-p"   . vertico-previous-group)
+         ("C-j"     . (lambda () (interactive)
+	        	(if minibuffer--require-match
+	        	    (minibuffer-complete-and-exit)
+	        	  (exit-minibuffer)))))
+  :config
+  (setq vertico-count 10
+        vertico-cycle t
+        vertico-resize t)
+  (advice-add #'tmm-add-prompt :after #'minibuffer-hide-completions)
+  (advice-add #'ffap-menu-ask :around
+              (lambda (&rest args)
+                (cl-letf (((symbol-function #'minibuffer-completion-help)
+                           #'ignore))
+                  (apply args))))
   :custom
-  (vertico-cycle t)
   (read-buffer-completion-ignore-case t)
   (read-file-name-completion-ignore-case t)
-  (completion-styles '(basic substring partial-completion flex))
-  :init
-  (vertico-mode))
-
+  (completion-styles '(basic substring partial-completion flex)))
 
 ;; Orderless configuration
 (use-package orderless
