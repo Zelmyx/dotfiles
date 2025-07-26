@@ -91,6 +91,9 @@ exec swayidle -w \
          before-sleep 'swaylock -f -i /home/edvin/.config/sway/wallpaper.jpg'
 
 
+for_window [app_id="firefox"] inhibit_idle fullscreen
+for_window [app_id="mullvad-browser"] inhibit_idle fullscreen 
+
 # Screen locking (manual)
 set $lock_screen exec bash ~/.config/sway/lock_screen.sh
 bindsym $mod+Escape exec $lock_screen
