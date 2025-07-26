@@ -189,18 +189,27 @@
 
 ;; Orderless configuration
 (use-package orderless
+  :after setup-minibuffer
   :ensure t
-  :custom
-  ;; Set orderless as the main completion style
-  (completion-styles '(orderless))
-  ;; Allow finer control per completion category
-  (completion-category-defaults nil)
-  (completion-category-overrides
-   '((file (styles basic orderless))    ; File completion uses `basic` + `orderless`
-     (command (styles orderless))       ; `M-x` (command) uses `orderless`
-     (buffer (styles orderless))        ; `C-x b` (buffer) uses `orderless`
-     (variable (styles orderless)))))   ; Variables (`C-h v`) use `orderless`
+  :demand
+  :config
+  (setq orderless-component-separator #'split-string-and-unquote)
+  (setq completion-styles '(orderless partial-completion basic))
+  (setf (alist-get ?~ orderless-affix-dispatch-alist nil 'remove) nil
+        (alist-get ?` orderless-affix-dispatch-alist) #'orderless-flex)
 
+  (defun orderless-fast-dispatch (word index total)
+    (and (= index 0) (= total 1) (length< word 5)
+       ;; `(orderless-regexp . ,(concat "^" (regexp-quote word)))
+       (cons 'orderless-literal-prefix word)))
+  
+  (orderless-define-completion-style orderless-fast
+    (orderless-style-dispatchers '(orderless-fast-dispatch
+                                   orderless-affix-dispatch))
+    (orderless-matching-styles '(orderless-literal orderless-regexp)))
+  
+  :bind (:map minibuffer-local-completion-map
+              ("SPC" . self-insert-command)))
 
 ;; Improve the accessibility of Emacs documentation by placing
 ;; descriptions directly in your minibuffer. Give it a try:
