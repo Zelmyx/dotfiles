@@ -213,7 +213,6 @@
 
 (use-package marginalia
   :ensure t
-  :after setup-minibuffer
   :init (marginalia-mode 1)
   :bind (:map vertico-map
          ("M-]" . marginalia-cycle)) ;; Not used
