@@ -6,7 +6,7 @@
  '(org-agenda-files (list org-directory))
  '(org-directory "~/org")
  '(package-selected-packages
-   '(eglot-booster uniquify which-key vertico use-package rust-mode rainbow-delimiters pyvenv pdf-tools org-drill orderless marginalia magit lsp-mode ligature julia-mode helpful haskell-mode elfeed eglot ef-themes doom-modeline corfu avy auctex all-the-icons-completion)))
+   '(ace-window which-key vertico use-package rust-mode rainbow-delimiters pyvenv pdf-tools org-drill orderless marginalia magit lsp-mode ligature julia-mode helpful haskell-mode elfeed eglot ef-themes doom-modeline corfu avy auctex all-the-icons-completion)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

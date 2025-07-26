@@ -216,6 +216,10 @@
   (ligature-set-ligatures 't '("->" "<-" "=>" "<=" "==" "&&" "||" "->>" "<<-" "!="))
   (global-ligature-mode t))
 
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . ace-window))
+
 ;; All the icons *NOT WORKING*
 (use-package all-the-icons
   :ensure t
