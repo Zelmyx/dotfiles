@@ -252,14 +252,25 @@
 ;; solution.
 (use-package corfu
   :ensure t
-  :init
-  (global-corfu-mode)
-  :custom
-  (corfu-auto t)
-  ;; You may want to play with delay/prefix/styles to suit your preferences.
-  (corfu-auto-delay 0.5)
-  (corfu-auto-prefix 0)
-  (completion-styles '(basic)))
+  :hook (((prog-mode text-mode tex-mode ielm-mode) . corfu-mode))
+  :bind (:map corfu-map
+         ("TAB" . corfu-next)
+         ([tab] . corfu-next)
+         ("S-TAB" . corfu-previous)
+         ([backtab] . corfu-previous)
+         ("M-RET" . corfu-insert)
+         ("M-." . corfu-show-location)
+         ("M-." . corfu-info-location)
+         ("C-h" . corfu-info-documentation))
+  :config
+  (setq corfu-auto-prefix 2
+        corfu-auto-delay 0.07
+        corfu-count 8
+        corfu-auto  t
+        corfu-cycle t
+        corfu-quit-no-match 'separator
+        corfu-preselect 'prompt
+        corfu-scroll-margin 5))
 
 ;; Adds LSP support. Note that you must have the respective LSP
 ;; server installed on your machine to use it with Eglot. e.g.
