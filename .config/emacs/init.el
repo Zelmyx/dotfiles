@@ -231,6 +231,10 @@
          :map ctl-x-r-map
          ("b" . consult-bookmark)))
 
+(use-package embark
+  :ensure t
+  :bind (("C-." . embark-act)))
+
 ;; All the icons *NOT WORKING*
 (use-package all-the-icons
   :ensure t
