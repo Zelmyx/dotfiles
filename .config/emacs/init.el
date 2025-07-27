@@ -221,6 +221,16 @@
   :bind (("M-o" . ace-window)
          ("C-x o" . ace-window)))
 
+(use-package consult
+  :ensure t
+  :bind (("C-x b" . consult-buffer)
+         ("M-s g"   . consult-grep)
+         ("M-g g" . consult-goto-line)
+         ("M-g M-g" . consult-goto-line)
+         ("M-y" . consult-yank-pop)
+         :map ctl-x-r-map
+         ("b" . consult-bookmark)))
+
 ;; All the icons *NOT WORKING*
 (use-package all-the-icons
   :ensure t
