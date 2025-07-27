@@ -218,7 +218,8 @@
 
 (use-package ace-window
   :ensure t
-  :bind ("M-o" . ace-window))
+  :bind (("M-o" . ace-window)
+         ("C-x o" . ace-window)))
 
 ;; All the icons *NOT WORKING*
 (use-package all-the-icons
