@@ -233,6 +233,10 @@
          :map ctl-x-r-map
          ("b" . consult-bookmark)))
 
+(use-package embark-consult
+  :ensure t
+  :after (embark consult))
+
 (use-package embark
   :ensure t
   :bind (("C-." . embark-act)))

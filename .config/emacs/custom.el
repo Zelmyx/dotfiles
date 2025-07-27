@@ -6,7 +6,7 @@
  '(org-agenda-files (list org-directory))
  '(org-directory "~/org")
  '(package-selected-packages
-   '(rainbow-mode which-key vundo vertico use-package rust-mode rainbow-delimiters pyvenv pdf-tools org-drill orderless marginalia magit lsp-mode ligature julia-mode helpful haskell-mode embark elfeed eglot ef-themes doom-modeline corfu consult auctex all-the-icons-completion ace-window)))
+   '(embark-consult which-key vundo vertico use-package rust-mode rainbow-mode rainbow-delimiters pyvenv pdf-tools org-drill orderless marginalia magit lsp-mode ligature julia-mode helpful haskell-mode embark elfeed eglot ef-themes doom-modeline corfu consult auctex all-the-icons-completion ace-window)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
