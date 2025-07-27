@@ -468,7 +468,8 @@
 
 (use-package avy
   :ensure t
-  :bind (("C-c s" . #'avy-goto-char-timer)))
+  :bind (("M-s s" . #'avy-goto-char-timer)
+         ("M-s M-s" . #'avy-goto-char-timer)))
 
 (use-package elfeed
   :ensure t)
