@@ -446,6 +446,9 @@
 ;;(advice-add 'org-latex-preview :after #'my/text-scale-adjust-latex-previews)
 ;;(add-hook 'org-latex-preview #'my/text-scale-adjust-latex-previews)
 
+(use-package rainbow-mode
+  :ensure t)
+
 ;; colours parenthesis different colours to easily distinguish
 ;; related parenthesis
 (use-package rainbow-delimiters
