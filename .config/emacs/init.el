@@ -276,7 +276,8 @@
   :ensure t
   :commands eglot
   :bind (:map eglot-mode-map
-              ("C-h ." . eldoc))
+              ("C-h ." . eldoc)
+              ("C-c f" . eglot-format-buffer))
   :hook ((eglot-managed-mode . my/eglot-eldoc-settings)
          (prog-mode . eglot-ensure))
   :config
