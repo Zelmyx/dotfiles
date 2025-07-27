@@ -295,6 +295,10 @@
 ;;   :after eglot
 ;;   :init (eglot-booster-mode))
 
+(use-package vundo
+  :ensure t
+  :bind (("C-x u" . vundo)))
+
 (use-package lsp-mode
   :disabled
   :ensure t
