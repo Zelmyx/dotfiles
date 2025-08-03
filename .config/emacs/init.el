@@ -406,7 +406,8 @@
   (custom-set-variables
    '(org-directory "~/org")
    '(org-agenda-files (list org-directory)))
-  
+
+  (setq org-default-notes-file (concat org-directory "/notes.org"))
   ;; Enable C support in Org Babel
   (org-babel-do-load-languages
    'org-babel-load-languages
