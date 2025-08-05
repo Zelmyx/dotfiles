@@ -412,9 +412,15 @@
 ;; CDLatex settings
 (use-package cdlatex
   :ensure t
-  :hook (LaTeX-mode . turn-on-cdlatex)
+  :hook
+  (LaTeX-mode . turn-on-cdlatex)
   :bind (:map cdlatex-mode-map 
-              ("<tab>" . cdlatex-tab)))
+              ("<tab>" . cdlatex-tab))
+  :config
+  (defun my/cdlatex-custom-commands ()
+    (add-to-list 'cdlatex-command-alist
+                 '("lim" "limits" "\\lim_{? \\to }" cdlatex-position-cursor nil nil t)))
+  (add-hook 'cdlatex-mode-hook #'my/cdlatex-custom-commands))
 
 ;; Yasnippet settings
 (use-package yasnippet
