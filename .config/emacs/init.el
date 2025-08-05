@@ -504,6 +504,9 @@
   ;; Org-capture note file
   (setq org-default-notes-file (concat org-directory "/notes.org"))
 
+  ;; Auto turn on cdlatex
+  (add-hook 'org-mode-hook #'turn-on-org-cdlatex)
+  
   ;; TODO keywords
   (setq org-todo-keywords '("TODO" "STARTED" "WAITING" "DONE"))
   ;; Enable C support in Org Babel
