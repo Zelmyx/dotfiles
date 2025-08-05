@@ -414,8 +414,7 @@
   :ensure t
   :hook (LaTeX-mode . turn-on-cdlatex)
   :bind (:map cdlatex-mode-map 
-              ("<tab>" . cdlatex-tab)
-              ("´" . cdlatex-math-symbol)))
+              ("<tab>" . cdlatex-tab)))
 
 ;; Yasnippet settings
 (use-package yasnippet
@@ -493,8 +492,7 @@
   :ensure t
   :bind (("C-c l" . #'org-store-link)
          ("C-c a" . #'org-agenda)
-         ("C-c c" . #'org-capture)
-         ("´" . cdlatex-math-symbol))
+         ("C-c c" . #'org-capture))
   :config
 
   (custom-set-variables
