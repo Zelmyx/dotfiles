@@ -39,6 +39,8 @@
 (require 'use-package)
 (setq use-package-always-ensure t)  ;; Automatically install packages when needed
 
+;; Java LSP
+(add-to-list 'exec-path "~/opt/jdtls/org.eclipse.jdt.ls.product/target/repository/bin/")
 
 ;; Performance tweaks for modern machines
 (setq gc-cons-threshold 100000000) ; 100 mb
@@ -51,7 +53,7 @@
 (setq inhibit-startup-screen t)
  
 ;; Set the font. Note: height = px * 100
-(set-face-attribute 'default nil :font "JetBrainsMono Nerd Font" :height 120)
+(set-face-attribute 'default nil :font "JetBrainsMono" :height 120)
 
 ;; Add unique buffer names in the minibuffer where there are many
 ;; identical files. This is super useful if you rely on folders for
@@ -89,8 +91,15 @@
 ;; Set warnings to silent
 (setq native-comp-async-report-warnings-errors 'silent)
 
-(global-display-line-numbers-mode)
-(setq  display-line-numbers-type 'relative)
+;; Do not enable line numbers for pdf view mode
+(require 'display-line-numbers)
+(defun display-line-numbers--turn-on ()
+  "Turn on `display-line-numbers-mode'."
+  (unless (or (minibufferp) (eq major-mode 'pdf-view-mode))
+    (display-line-numbers-mode)))
+
+(global-display-line-numbers-mode 1)
+(setq  display-line-numbers-type 'absolute)
 
 ;; Set conifg directory
 (setq user-emacs-directory "~/.config/emacs")
@@ -305,6 +314,13 @@
 ;;   :after eglot
 ;;   :init (eglot-booster-mode))
 
+(use-package editorconfig
+  :ensure t                ; pull from MELPA
+  :hook (prog-mode . editorconfig-mode) ; enable for all programming modes
+  :config
+  ;; Optional: tighten the search depth (default is 5)
+  (setq editorconfig-search-depth 10))
+
 (use-package vundo
   :ensure t
   :bind (("C-x u" . vundo)))
@@ -419,7 +435,17 @@
   :config
   (defun my/cdlatex-custom-commands ()
     (add-to-list 'cdlatex-command-alist
-                 '("lim" "limits" "\\lim_{? \\to }" cdlatex-position-cursor nil nil t)))
+                 '("lim" "limits" "\\lim_{? \\to }" cdlatex-position-cursor nil nil t))
+    (add-to-list 'cdlatex-command-alist
+                 '("in" "in" "? \\in" cdlatex-position-cursor nil nil t))
+    (add-to-list 'cdlatex-command-alist
+                 '("fin" "for all in" "\\forall ? \\in " cdlatex-position-cursor nil nil t))
+    (add-to-list 'cdlatex-math-modify-alist
+                 '(?B "\\mathbb" nil t nil nil))
+    (add-to-list 'cdlatex-math-modify-alist
+                 '(?n "\\lVert ? \\rVert_{}" nil t nil nil))
+    (add-to-list 'cdlatex-math-modify-alist
+                 '(?a "\\lvert ? \\rvert_{}" nil t nil nil)))
   (add-hook 'cdlatex-mode-hook #'my/cdlatex-custom-commands))
 
 ;; Yasnippet settings
@@ -481,6 +507,92 @@
               (bound-and-true-p org-cdlatex-mode))
           (cdlatex-tab)
         (yas-next-field-or-maybe-expand)))))
+
+
+;; Array/tabular input with org-tables and cdlatex 
+(use-package org-table
+  :ensure nil
+  :after cdlatex
+  :bind (:map orgtbl-mode-map
+              ("<tab>" . lazytab-org-table-next-field-maybe)
+              ("TAB" . lazytab-org-table-next-field-maybe))
+  :init
+  (add-hook 'cdlatex-tab-hook 'lazytab-cdlatex-or-orgtbl-next-field 90)
+  ;; Tabular environments using cdlatex
+  (add-to-list 'cdlatex-command-alist '("smat" "Insert smallmatrix env"
+                                       "\\left( \\begin{smallmatrix} ? \\end{smallmatrix} \\right)"
+                                       lazytab-position-cursor-and-edit
+                                       nil nil t))
+  (add-to-list 'cdlatex-command-alist '("bmat" "Insert bmatrix env"
+                                       "\\begin{bmatrix} ? \\end{bmatrix}"
+                                       lazytab-position-cursor-and-edit
+                                       nil nil t))
+  (add-to-list 'cdlatex-command-alist '("pmat" "Insert pmatrix env"
+                                       "\\begin{pmatrix} ? \\end{pmatrix}"
+                                       lazytab-position-cursor-and-edit
+                                       nil nil t))
+  (add-to-list 'cdlatex-command-alist '("tbl" "Insert table"
+                                        "\\begin{table}\n\\centering ? \\caption{}\n\\end{table}\n"
+                                       lazytab-position-cursor-and-edit
+                                       nil t nil))
+  :config
+  ;; Tab handling in org tables
+  (defun lazytab-position-cursor-and-edit ()
+    ;; (if (search-backward "\?" (- (point) 100) t)
+    ;;     (delete-char 1))
+    (cdlatex-position-cursor)
+    (lazytab-orgtbl-edit))
+
+  (defun lazytab-orgtbl-edit ()
+    (advice-add 'orgtbl-ctrl-c-ctrl-c :after #'lazytab-orgtbl-replace)
+    (orgtbl-mode 1)
+    (open-line 1)
+    (insert "\n|"))
+
+  (defun lazytab-orgtbl-replace (_)
+    (interactive "P")
+    (unless (org-at-table-p) (user-error "Not at a table"))
+    (let* ((table (org-table-to-lisp))
+           params
+           (replacement-table
+            (if (texmathp)
+                (lazytab-orgtbl-to-amsmath table params)
+              (orgtbl-to-latex table params))))
+      (kill-region (org-table-begin) (org-table-end))
+      (open-line 1)
+      (push-mark)
+      (insert replacement-table)
+      (align-regexp (region-beginning) (region-end) "\\([:space:]*\\)& ")
+      (orgtbl-mode -1)
+      (advice-remove 'orgtbl-ctrl-c-ctrl-c #'lazytab-orgtbl-replace)))
+  
+  (defun lazytab-orgtbl-to-amsmath (table params)
+    (orgtbl-to-generic
+     table
+     (org-combine-plists
+      '(:splice t
+                :lstart ""
+                :lend " \\\\"
+                :sep " & "
+                :hline nil
+                :llend "")
+      params)))
+
+  (defun lazytab-cdlatex-or-orgtbl-next-field ()
+    (when (and (bound-and-true-p orgtbl-mode)
+               (org-table-p)
+               (looking-at "[[:space:]]*\\(?:|\\|$\\)")
+               (let ((s (thing-at-point 'sexp)))
+                 (not (and s (assoc s cdlatex-command-alist-comb)))))
+      (call-interactively #'org-table-next-field)
+      t))
+
+  (defun lazytab-org-table-next-field-maybe ()
+    (interactive)
+    (if (bound-and-true-p cdlatex-mode)
+        (cdlatex-tab)
+      (org-table-next-field))))
+
 
 ;; An extremely feature-rich git client. Activate it with "C-c g".
 (use-package magit
@@ -553,7 +665,104 @@
             :scale (+ 1.0 (* 0.25 scale-amount)))))))
 
   ;; Hook to adjust LaTeX preview size on text scale
-  (add-hook 'text-scale-mode-hook #'my/text-scale-adjust-latex-previews))
+  (add-hook 'text-scale-mode-hook #'my/text-scale-adjust-latex-previews)
+
+  ;; https://orgmode.org/worg/org-tutorials/org-latex-export.html
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+                 '("my-article"
+                   "
+% -------------------------------------------------
+%   Modern Math‑Notes Preamble (pdfLaTeX)
+% -------------------------------------------------
+\\documentclass[11pt,a4paper]{article}   % base class – feel free to change options
+
+% ---------- Page layout ----------
+\\usepackage[margin=1in,headsep=0.2in]{geometry}
+\\usepackage{parskip}                    % vertical space between paragraphs, no indent
+\\usepackage{microtype}                  % subtle typographic tweaks
+
+% ---------- Fonts ----------
+% Choose a clean serif + matching sans‑serif + mono family.
+% Options shown: Palatino (mathpazo) or Times (newtx). Uncomment the pair you prefer.
+
+%--- Palatino family -------------------------------------------------
+\\usepackage{mathpazo}                   % Palatino text + matching math fonts
+\\renewcommand{\\sfdefault}{pplj}         % Palatino‑like sans‑serif
+%---------------------------------------------------------------------
+
+%--- Times family ----------------------------------------------------
+% \\usepackage{newtxtext,newtxmath}       % Times text + matching math fonts
+% \\renewcommand{\\sfdefault}{lmss}        % Latin Modern Sans (good complement)
+%---------------------------------------------------------------------
+
+% ---------- Core math packages ----------
+\\usepackage{amsmath,amssymb,amsthm}      % classic AMS tools
+\\usepackage{mathtools}                  % extensions to amsmath
+\\usepackage{bm}                         % bold symbols in math mode
+\\usepackage{physics}                    % handy shortcuts (\\dv, \\pdv, \\abs, …)
+
+% ---------- Theorem styles ----------
+\\newtheoremstyle{modern}% name
+  {6pt}%                Space above
+  {6pt}%                Space below
+  {\\itshape}%           Body font
+  {}%                   Indent amount
+  {\\bfseries}%          Head font
+  {}%                  Punctuation after head
+  {}%                  Space after head
+  {}%                   Head spec (empty = “name”)
+\\theoremstyle{modern}
+\\newtheorem*{theorem}{}
+\\newtheorem*{lemma}{}
+\\newtheorem*{prop}{}
+\\newtheorem*{corollary}{}
+\\theoremstyle{definition}
+\\newtheorem*{definition}{}
+\\newtheorem*{example}{}
+\\newtheorem*{exercise}{}
+\\theoremstyle{remark}
+\\newtheorem*{remark}{}
+
+% ---------- Section formatting ----------
+\\usepackage{titlesec}
+\\titleformat{\\section}
+  {\\normalfont\\Large\\bfseries}{\\thesection}{1em}{}
+\\titleformat{\\subsection}
+  {\\normalfont\\large\\bfseries}{\\thesubsection}{1em}{}
+\\titleformat{\\subsubsection}
+  {\\normalfont\\normalsize\\bfseries}{\\thesubsubsection}{1em}{}
+
+% ---------- Hyperlinks ----------
+\\usepackage[hidelinks]{hyperref}       % hide default boxes
+\\hypersetup{
+    colorlinks=true,
+    linkcolor=MidnightBlue,
+    citecolor=MidnightBlue,
+    urlcolor=MidnightBlue,
+    pdftitle={My Math Notes},
+    pdfauthor={Your Name}
+}
+
+% ---------- Clever references ----------
+\\usepackage{cleveref}
+\\crefname{equation}{eq.}{eqs.}
+\\Crefname{equation}{Equation}{Equations}
+
+% ---------- Miscellaneous ----------
+\\usepackage{enumitem}
+\\setlist[itemize]{noitemsep, topsep=0pt}
+\\setlist[enumerate]{label=\\arabic*.}
+
+         [NO-DEFAULT-PACKAGES]
+         [PACKAGES]
+         [EXTRA]"
+         ("\\section{%s}" . "\\section*{%s}")
+         ("\\subsection{%s}" . "\\subsection*{%s}")
+         ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+         ("\\paragraph{%s}" . "\\paragraph*{%s}")
+         ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))))
+  )
 
 ;; kanske behöver dessa någon gång
 ;;(add-hook 'text-scale-mode-hook #'my/text-scale-adjust-latex-previews)
