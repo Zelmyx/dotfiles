@@ -26,11 +26,11 @@ VPN_LOCATION=$(mullvad status | awk 'NR==4 {print $3,$4}')
 vpn_report() {
     if [ "$VPN_STATUS" = "$CONNECTED" ]; then
         #ip_address=$(echo "$vpn_status_raw" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+')
-        echo "{\"text\": \"$VPN_LOCATION\", \"class\": \"connected\"}"
+        echo "{\"text\": \"🔒 $VPN_LOCATION\", \"class\": \"connected\"}"
     elif [ "$VPN_STATUS" = "$CONNECTING" ]; then
-        echo '{"text": "Connecting...", "class": "connecting"}'
+        echo '{"text": "⏳ Connecting...", "class": "connecting"}'
     else
-        echo '{"text": "No VPN", "class": "disconnected"}'
+        echo '{"text": "⛔ No VPN", "class": "disconnected"}'
     fi
 }
 

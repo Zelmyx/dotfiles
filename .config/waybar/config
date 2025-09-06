@@ -13,7 +13,7 @@
        "exec": "~/.config/waybar/scripts/vpn_module.sh",
        "interval": 1,
        "return-type": "json", //"text" if the script just echoes plain text
-       "format": " {}",
+       "format": "{}",
        "on-click": "~/.config/waybar/scripts/vpn_module.sh --toggle-connection",
        "on-click-right": "~/.config/waybar/scripts/vpn_module.sh --location-menu",
        "on-click-middle": "~/.config/waybar/scripts/vpn_module.sh --ip_address",
