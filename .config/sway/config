@@ -72,7 +72,7 @@ set $alt Mod1
 bindsym $mod+Shift+c reload
 
 # Quit your current session and return to the log-in manager/tty:
-bindsym $mod+Shift+e exec $HOME/.config/sway/wofi_powermenu.sh
+bindsym $mod+Escape exec $HOME/.config/sway/wofi_powermenu.sh
 
 # Screen locking (automatic, with a timeout)
 
@@ -92,12 +92,12 @@ exec swayidle -w \
          before-sleep 'swaylock -f -i /home/edvin/.config/sway/wallpaper.jpg'
 
 
-for_window [app_id="firefox"] inhibit_idle fullscreen
-for_window [app_id="mullvad-browser"] inhibit_idle fullscreen 
+for_window [class=".*"] inhibit_idle fullscreen
+for_window [app_id=".*"] inhibit_idle fullscreen
 
 # Screen locking (manual)
 set $lock_screen exec bash ~/.config/sway/lock_screen.sh
-bindsym $mod+Escape exec $lock_screen
+bindsym $mod+l exec $lock_screen
 
 #========================================#
 # Keyboard Shortcuts (Window Management) #
