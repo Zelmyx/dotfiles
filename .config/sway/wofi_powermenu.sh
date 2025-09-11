@@ -6,7 +6,7 @@ selected=$(echo -e $entries|wofi --width 250 --height 240 --dmenu --cache-file /
 
 case $selected in
     logout)
-        pkill -u kia;;
+        pkill -u edvin;;
     lock)
         exec /home/edvin/.config/sway/lock_screen.sh;;
     suspend)
