@@ -84,6 +84,9 @@
 ;; Keep files up-to-date when they change outside Emacs
 (global-auto-revert-mode t)
 
+;; Fit lines to screen size
+(global-visual-line-mode t)
+
 ;; Display line numbers only when in programming modes
 ;; (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 ;; (column-number-mode)
@@ -157,8 +160,35 @@
 ;; https://protesilaos.com/emacs/ef-themes
 (use-package ef-themes
   :ensure t
+  :init
+  ;; Override the palette with Oceanic-Material colors
+  (setq ef-themes-common-palette-overrides
+        '((bg-main    "#282C34")
+          (bg-alt     "#1B2B34")
+          (fg-main    "#C0C5CE")
+          (fg-dim     "#5F676A")
+          (cursor     "#6699CC")
+
+          (red        "#EC5F67")
+          (red-warmer "#F2777A")
+
+          (green      "#A9B665")
+          (green-cooler "#B5BD68")
+
+          (yellow     "#D8A657")
+          (yellow-warmer "#F0C674")
+
+          (blue       "#6699CC")
+          (blue-warmer "#81A2BE")
+
+          (magenta    "#C594C5")
+          (magenta-warmer "#B294BB")
+
+          (cyan       "#62B3B2")
+          (cyan-warmer "#8ABEB7")))
   :config
-  (ef-themes-select 'ef-arbutus))
+  ;; Pick a base dark theme and apply overrides
+  (ef-themes-select 'ef-night))
 
 ;; Minibuffer completion is essential to your Emacs workflow and
 ;; Vertico is currently one of the best out there. There's a lot to
@@ -433,6 +463,8 @@
   :bind (:map cdlatex-mode-map 
               ("<tab>" . cdlatex-tab))
   :config
+  ;; (setq cdlatex-math-symbol-prefix 180)
+  
   (defun my/cdlatex-custom-commands ()
     (add-to-list 'cdlatex-command-alist
                  '("lim" "limits" "\\lim_{? \\to }" cdlatex-position-cursor nil nil t))
@@ -610,9 +642,15 @@
   :ensure t
   :bind (("C-c l" . #'org-store-link)
          ("C-c a" . #'org-agenda)
-         ("C-c c" . #'org-capture))
+         ("C-c c" . #'org-capture)
+         ("C-c m" . my/insert-inline-math))
   :config
-
+  (defun my/insert-inline-math ()
+    "Insert \"\\(\\)\" and leave the point in the middle."
+    (interactive)
+    (insert "\\(\\)")
+    (backward-char 2))
+  
   (custom-set-variables
    '(org-directory "~/org")
    '(org-agenda-files (list org-directory)))

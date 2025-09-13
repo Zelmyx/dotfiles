@@ -18,7 +18,6 @@
 @define-color white #a9b1d6;
 @define-color orange #ff9e64;
 
-
 /* Everforest Dark Colors */
 @define-color background #2b3339;
 @define-color background-light #323c41;
@@ -47,8 +46,6 @@
 @define-color white #ffffff;
 @define-color orange #ff8952;
 
-
-
 /* Gruvbox Dark Colors */
 @define-color background #282828;
 @define-color background-light #3c3836;
@@ -63,7 +60,20 @@
 @define-color white #ebdbb2;
 @define-color orange #d65d0e;
 
+/* Oceanic Material base palette */
+@define-color background      #282C34;
+@define-color background-alt  #1B2B34;
+@define-color foreground      #C0C5CE;
+@define-color dim             #5F676A;
+@define-color black           #1B2B34;
 
+@define-color red             #EC5F67;
+@define-color green           #A9B665;
+@define-color yellow          #D8A657;
+@define-color blue            #6699CC;
+@define-color magenta         #C594C5;
+@define-color cyan            #62B3B2;
+@define-color orange          #E78A4E;
 
 /* Module-specific colors */
 @define-color workspaces-color @foreground;
