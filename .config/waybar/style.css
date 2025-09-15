@@ -1,7 +1,12 @@
-/*https://github.com/arkboix/sway/blob/main/files/.config/waybar/style.css*/
+@import url("colors.css");
 
-/*Colorschemes, there are Gruvbox, Tokyo Night, and Everforest by default. The way it works is whichever colorscheme section is defined last will be used. Here everforest is last, but put any one you want to use as the last one.*/
+* {  
+  font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  }
 
+<<<<<<< HEAD
 
 
 /* Tokyo Night */
@@ -115,210 +120,278 @@
     font-family: "JetBrainsMono Nerd Font", "FiraCode Nerd Font", sans-serif;
     font-size: 14px;
     min-height: 0;
+=======
+#waybar {
+/*#background-color: #11151a;*/
+background: transparent;
+color: @fg;
+border-radius: 50px 50px 50px 50px;
+background-color: rgba(0, 0, 0, 0.3);
+>>>>>>> 5c7c442 (change base waybar config)
 }
 
-window#waybar {
-    background-color: @background;
-    color: @foreground;
+tooltip {
+    background-color: @bg-dark;
+    border: 1px solid @accent-blue;
+    border-radius: 8px;
+}
+
+tooltip label {
+    color: @fg;
+}
+
+button {
+border: none;
+border-radius: 0;
+padding: 0 5px;
+transition: all 0.2s ease;
+}
+
+#workspaces {
+background-color: @bg-dark;
+border-radius: 10px;
+margin: 5px;
+padding: 2px;
 }
 
 
-
-/* Common module styling with border-bottom */
-#mode, #mpd, #custom-weather, #custom-playerctl, #clock, #cpu,
-#memory, #temperature, #battery, #network, #pulseaudio,
-#backlight, #disk, #custom-uptime, #custom-updates, #custom-quote,
-#idle_inhibitor, #tray {
-    padding: 0 10px;
-    margin: 0 2px;
-    border-bottom: 2px solid transparent;
-    background-color: transparent;
-}
-
-/* Workspaces styling */
 #workspaces button {
-    padding: 0 10px;
-    background-color: transparent;
-    color: @workspaces-color;
-    margin: 0;
+background-color: transparent;
+color: @fg-alt;
+border-radius: 6px;
+margin: 0 2px;
+padding: 0 8px;
+transition: all 0.2s ease;
 }
 
 #workspaces button:hover {
-    background: @background-light;
-    box-shadow: inherit;
+color: @accent-purple;
+background-color: rgba(187, 154, 247, 0.1);
 }
 
-#workspaces button.focused {
-    box-shadow: inset 0 -2px @workspaces-focused-fg;
-    color: @workspaces-focused-fg;
-    font-weight: 900;
+#workspaces button.active {
+color: @accent-blue;
+background-color: rgba(122, 162, 247, 0.1);
+font-weight: bold;
 }
 
 #workspaces button.urgent {
-    background-color: @workspaces-urgent-bg;
-    color: @workspaces-urgent-fg;
+background-color: @red;
+color: @bg-black;
 }
 
-/* Module-specific styling */
-#mode {
-    color: @mode-color;
-    border-bottom-color: @mode-color;
+#custom-separator {
+margin-right: 10px;
+margin-left: 10px;
 }
 
-#mpd {
-    color: @mpd-color;
-    border-bottom-color: @mpd-color;
+#custom-opensuse {
+    background-image: url("/home/edvin/Pictures/logos/OpenSUSE_Logo.svg");
+    background-color: @accent-blue;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 19px;
+    padding: 0px 3px 0px 3px;
+    margin: 5px;
+    border-radius: 10px;
+    min-width: 24px;
+    min-height: 24px;
 }
 
-#mpd.disconnected,
-#mpd.stopped {
-    color: @foreground;
-    border-bottom-color: transparent;
+#custom-notification {
+background-color: @bg-dark;
+color: @accent-yellow;
+padding: 0 12px;
+border-radius: 10px;
+margin: 5px;
+font-size: 20px;
 }
 
-#custom-weather {
-    color: @weather-color;
-    border-bottom-color: @weather-color;
+#window {
+background-color: @bg-dark;
+color: @accent-green;
+padding: 0 12px;
+border-radius: 10px;
+margin: 5px;
 }
 
-#custom-playerctl {
-    color: @playerctl-color;
-    border-bottom-color: @playerctl-color;
+#custom-updates.icon {
+background-color: @accent-yellow;
+color: @bg-black;
+padding: 0px 7px 0px 7px;
+border-radius: 10px 0 0 10px;
+margin: 5px 0 5px 5px;
+font-size: 20px;
 }
 
-#custom-playerctl.Playing {
-    color: @cyan;
-    border-bottom-color: @cyan;
+#custom-updates.text {
+background-color: @bg-dark;
+color: @accent-yellow;
+padding: 0 12px;
+border-radius: 0 10px 10px 0;
+margin: 5px 5px 5px 0;
 }
 
-#custom-playerctl.Paused {
-    color: @orange;
-    border-bottom-color: @orange;
-}
-
-#clock {
-    color: @clock-color;
-    border-bottom-color: @clock-color;
-}
-
-#cpu {
-    color: @cpu-color;
-    border-bottom-color: @cpu-color;
-}
-
-#memory {
-    color: @memory-color;
-    border-bottom-color: @memory-color;
-}
-
-#temperature {
-    color: @temperature-color;
-    border-bottom-color: @temperature-color;
-}
-
-#temperature.critical {
-    color: @temperature-critical-color;
-    border-bottom-color: @temperature-critical-color;
-}
-
-#battery {
-    color: @battery-color;
-    border-bottom-color: @battery-color;
-}
-
-#battery.charging, #battery.plugged {
-    color: @battery-charging-color;
-    border-bottom-color: @battery-charging-color;
-}
-
-#battery.warning:not(.charging) {
-    color: @battery-warning-color;
-    border-bottom-color: @battery-warning-color;
-}
-
-#battery.critical:not(.charging) {
-    color: @battery-critical-color;
-    border-bottom-color: @battery-critical-color;
-}
-
-#network {
-    color: @network-color;
-    border-bottom-color: @network-color;
-}
-
-#network.disconnected {
-    color: @network-disconnected-color;
-    border-bottom-color: @network-disconnected-color;
-}
-
-#pulseaudio {
-    color: @pulseaudio-color;
-    border-bottom-color: @pulseaudio-color;
-}
-
-#pulseaudio.muted {
-    color: @pulseaudio-muted-color;
-    border-bottom-color: @pulseaudio-muted-color;
-}
-
-#backlight {
-    color: @backlight-color;
-    border-bottom-color: @backlight-color;
-}
-
-#disk {
-    color: @disk-color;
-    border-bottom-color: @disk-color;
-}
-
-#custom-uptime {
-    color: @uptime-color;
-    border-bottom-color: @uptime-color;
-}
-
-#custom-updates {
-    color: @updates-color;
-    border-bottom-color: @updates-color;
-}
-
-#custom-quote {
-    color: @quote-color;
-    border-bottom-color: @quote-color;
+#custom-vpn {
+background-color: @bg-dark;
+color: @accent-green;
+padding: 0 12px;
+border-radius: 10px 10px 10px 10px;
+margin: 5px 5px 5px 0;    
 }
 
 #idle_inhibitor {
-    color: @idle-inhibitor-color;
-    border-bottom-color: transparent;
+background-color: @bg-dark;
+color: @fg;
+border-radius: 10px;
+margin: 5px;
+padding: 0 10px;
+font-size: 20px;
 }
 
 #idle_inhibitor.activated {
-    color: @idle-inhibitor-active-color;
-    border-bottom-color: @idle-inhibitor-active-color;
+color: @accent-green;
 }
 
-#custom-vpn.connected {
-    color: @green;
-}
-#custom-vpn.connecting {
-    color: @yellow;
-}
-#custom-vpn.disconnected {
-    color: @red;
+#network.icon {
+background-color: @accent-purple;
+color: @bg-black;
+padding: 0 12px;
+border-radius: 10px 0 0 10px;
+margin: 5px 0 5px 5px;
 }
 
+#network.text {
+background-color: @bg-dark;
+color: @accent-purple;
+padding: 0 12px;
+border-radius: 0 10px 10px 0;
+margin: 5px 5px 5px 0;
+}
+
+#bluetooth.icon {
+background-color: @accent-cyan;
+color: @bg-black;
+padding: 0 12px;
+border-radius: 10px;
+margin: 5px;
+}
+
+#cpu.icon {
+background-color: @accent-blue;
+color: @bg-black;
+padding: 0px 13px 0px 5px;
+border-radius: 10px 0 0 10px;
+margin: 5px ;
+font-size: 15px;
+}
+
+#cpu.text {
+background-color: @bg-dark;
+color: @accent-green;
+padding: 0 12px;
+border-radius: 0 10px 10px 0;
+margin: 5px 5px 5px 0;
+}
+
+#memory.icon {
+background-color: @accent-cyan;
+color: @bg-black;
+padding: 0px 12px 0px 6px;
+border-radius: 10px 0 0 10px;
+margin: 5px 0 5px 5px;
+font-size: 20px;
+}
+
+#memory {
+background-color: @bg-dark;
+color: @accent-cyan;
+padding: 0 12px;
+border-radius: 0 10px 10px 0;
+margin: 5px 5px 5px 0;
+}
+
+#battery.icon {
+background-color: @accent-orange;
+color: @bg-black;
+padding: 0 12px;
+border-radius: 10px 0 0 10px;
+margin: 5px 0 5px 5px;
+}
+
+#battery.text {
+background-color: @bg-dark;
+color: @accent-orange;
+padding: 0 12px;
+border-radius: 0 10px 10px 0;
+margin: 5px 5px 5px 0;
+}
+
+#battery.critical:not(.charging) {
+animation: blink 0.7s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite alternate;
+}
+
+#pulseaudio.icon {
+background-color: @accent-blue;
+color: @bg-black;
+padding: 0px 5px 0px 6px;
+border-radius: 10px 0 0 10px;
+margin: 5px 0px 5px 0px;
+font-size: 20px;
+}
+
+#pulseaudio.text {
+background-color: @bg-dark;
+color: @accent-blue;
+padding: 0 12px;
+border-radius: 0 10px 10px 0;
+margin: 5px 5px 5px 0;
+}
+
+#clock.icon {
+background-color: @red;
+color: @bg-black;
+padding: 0px 5px 0px 6px;
+border-radius: 10px 0 0 10px;
+margin: 5px 0px 5px 0px;
+font-size: 20px;
+}
+
+#clock.text {
+background-color: @bg-dark;
+color: @red;
+padding: 0 12px;
+border-radius: 0 10px 10px 0;
+margin: 5px 5px 5px 0;
+}
 
 #tray {
-    background-color: transparent;
-    padding: 0 10px;
-    margin: 0 2px;
+background-color: @bg-dark;
+padding: 0 10px;
+border-radius: 10px;
+margin: 5px;
 }
 
 #tray > .passive {
-    -gtk-icon-effect: dim;
+-gtk-icon-effect: dim;
 }
 
 #tray > .needs-attention {
-    -gtk-icon-effect: highlight;
-    color: @red;
-    border-bottom-color: @red;
+-gtk-icon-effect: highlight;
+background-color: @red;
+}
+
+@keyframes blink {
+    to {
+        background-color: @red;
+        color: @bg-black;
+    }
+}
+
+.modules-left > widget\:first-child > #workspaces {
+margin-left: 0;
+}
+
+.modules-right > widget\:last-child > #workspaces {
+margin-right: 0;
 }
